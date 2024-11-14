@@ -25,6 +25,7 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.SAXException;
 
 import dao.DaoImplFile;
+import dao.jaxb.DaoImplJaxb;
 import dao.xml.DaoImplXml;
 import dao.xml.SaxReader;
 
@@ -36,13 +37,13 @@ public class Shop {
 // private Sale[] sales;
 	private ArrayList<Sale> sales;
 	private int numberSales;
-	private DaoImplXml dao;
+	private DaoImplJaxb dao;
 	final static double TAX_RATE = 1.04;
 
 	public Shop() {
 		inventory = new ArrayList<Product>();
 		sales = new ArrayList<Sale>();
-		this.dao = new DaoImplXml();
+		this.dao = new DaoImplJaxb();
 		List<Product> inventory;
 	}
 
