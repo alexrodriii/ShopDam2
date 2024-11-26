@@ -39,7 +39,7 @@ public class DaoImplXml implements Dao {
 	}
 
 	@Override
-	public boolean writeInventory(List<Product> inventory) {
+	public boolean writeInventory(ArrayList<Product> inventory) {
 	    DomWriter domWriter = new DomWriter();
 	    domWriter.generateDocument(inventory); 
 	    domWriter.generateXml(); 
@@ -48,7 +48,7 @@ public class DaoImplXml implements Dao {
 	}
 
 	@Override
-	public List<Product> getInventory() {
+	public ArrayList<Product> getInventory() {
 		ArrayList<Product> inventory = null;
 
 		SAXParserFactory factory = SAXParserFactory.newInstance();

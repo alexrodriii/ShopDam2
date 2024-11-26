@@ -1,5 +1,14 @@
 package model;
 
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlElementWrapper;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlType;
+
+@XmlRootElement(name = "product")
+@XmlType(propOrder = { "name", "id", "wholesalerPrice", "stock", "available", "publicPrice" })
+
 public class Product {
 
 	private int id;
@@ -18,9 +27,15 @@ public class Product {
 
 	public final static double EXPIRATION_RATE = 0.60;
 
+	public Product() {
+		this.available = true;
+		this.id = id;
+	}
+
 	public Product(String name, Amount wholesalerPrice, boolean available, int stock) {
 
 		super();
+		this.id = ++totalProducts;
 
 		this.id = totalProducts + 1;
 
@@ -37,18 +52,19 @@ public class Product {
 		totalProducts++;
 
 	}
-
-	public Product(String name, Amount wholesalerPrice, int stock) {
-
-		super();
-
-		this.name = name;
-
-		this.wholesalerPrice = wholesalerPrice;
-
-		this.stock = stock;
-
-	}
+	/*
+	 * public Product(String name, Amount wholesalerPrice, int stock) {
+	 *
+	 * super();
+	 *
+	 * this.name = name;
+	 *
+	 * this.wholesalerPrice = wholesalerPrice;
+	 *
+	 * this.stock = stock;
+	 *
+	 * }
+	 */
 
 	public Product(String name) {
 
@@ -56,6 +72,7 @@ public class Product {
 
 	}
 
+	@XmlAttribute(name = "id")
 	public int getId() {
 
 		return id;
@@ -68,6 +85,7 @@ public class Product {
 
 	}
 
+	@XmlAttribute(name = "name")
 	public String getName() {
 
 		return name;
@@ -80,6 +98,7 @@ public class Product {
 
 	}
 
+	@XmlElement(name = "PublicPrice")
 	public Amount getPublicPrice() {
 
 		return publicPrice;
@@ -92,6 +111,7 @@ public class Product {
 
 	}
 
+	@XmlElement(name = "wholesalerPrice")
 	public Amount getWholesalerPrice() {
 
 		return wholesalerPrice;
@@ -101,13 +121,14 @@ public class Product {
 	public void setWholesalerPrice(Amount wholesalerPrice) {
 
 		this.wholesalerPrice = wholesalerPrice;
+		this.publicPrice = new Amount(wholesalerPrice.getValue() * 2);
 
 	}
 
+	@XmlElement(name = "available")
 	public boolean isAvailable() {
-
+		boolean available = true;
 		return available;
-
 	}
 
 	public void setAvailable(boolean available) {
@@ -116,6 +137,7 @@ public class Product {
 
 	}
 
+	@XmlElement(name = "stock")
 	public int getStock() {
 
 		return stock;

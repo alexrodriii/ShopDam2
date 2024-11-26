@@ -1,5 +1,6 @@
 package dao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import model.Employee;
@@ -13,7 +14,7 @@ public interface Dao {
 
 	public Employee getEmployee(int employeeId, String password);
 
-	public boolean writeInventory(List<Product> inventory);
+	public boolean writeInventory(ArrayList<Product> inventory);
 
-	public List<Product> getInventory();
+	public ArrayList<Product> getInventory();
 }

@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 import model.Employee;
@@ -65,13 +66,13 @@ public class DaoImplJDBC implements Dao {
 	}
 
 	@Override
-	public boolean writeInventory(List<Product> inventory) {
+	public boolean writeInventory(ArrayList<Product> inventory) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
-	public List<Product> getInventory() {
+	public ArrayList<Product> getInventory() {
 		// TODO Auto-generated method stub
 		return null;
 	}

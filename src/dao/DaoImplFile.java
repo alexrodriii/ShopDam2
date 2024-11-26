@@ -37,7 +37,7 @@ public class DaoImplFile implements Dao{
 	}
 
 	@Override
-	public boolean writeInventory(List<Product> inventory) {
+	public boolean writeInventory(ArrayList<Product> inventory) {
 	     String fileName = "inventory_" + java.time.LocalDate.now() + ".txt";
 	        File file = new File(System.getProperty("user.dir") + File.separator + "files" + File.separator + fileName);
 
@@ -59,8 +59,8 @@ public class DaoImplFile implements Dao{
 	    }
 
 	@Override
-	public List<Product> getInventory() {
-		  List<Product> inventory = new ArrayList<>();
+	public ArrayList<Product> getInventory() {
+		ArrayList<Product> inventory = new ArrayList<>();
 	        File file = new File("files/inputinventory.txt");
 
 	        try (BufferedReader br = new BufferedReader(new FileReader(file))) {

@@ -17,13 +17,10 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-
 import org.xml.sax.SAXException;
-
 import dao.DaoImplFile;
 import dao.jaxb.DaoImplJaxb;
 import dao.xml.DaoImplXml;
@@ -191,9 +188,7 @@ public class Shop {
 	 * load initial inventory to shop
 	 */
 	public void loadInventory() {
-		inventory = new ArrayList<>();
-		inventory.add(new Product("Manzana", cash, false, 10));
-		inventory.add(new Product("Pera", cash, false, 20));
+
 // addProduct(new Product("Manzana", new Amount(10.00), true, 10));
 // addProduct(new Product("Pera", new Amount(20.00), true, 20));
 // addProduct(new Product("Hamburguesa", new Amount(30.00), true, 30));
@@ -207,8 +202,8 @@ public class Shop {
 	 */
 	private void readInventory() {
 // locate file, path and name
-		List<Product> tempInventory = dao.getInventory();
-		inventory = new ArrayList<>(tempInventory);
+		inventory = dao.getInventory();
+	
 
 	}
 	/*
