@@ -17,4 +17,11 @@ public interface Dao {
 	public boolean writeInventory(ArrayList<Product> inventory);
 
 	public ArrayList<Product> getInventory();
+	
+	public boolean addProduct(Product product);
+	
+	public boolean updateStock(String productName, int newStock);
+	
+	public boolean deleteProduct(Product product);
+	
 }

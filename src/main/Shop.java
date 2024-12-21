@@ -22,6 +22,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.SAXException;
 import dao.DaoImplFile;
+import dao.DaoImplJDBC;
 import dao.jaxb.DaoImplJaxb;
 import dao.xml.DaoImplXml;
 import dao.xml.SaxReader;
@@ -34,13 +35,14 @@ public class Shop {
 // private Sale[] sales;
 	private ArrayList<Sale> sales;
 	private int numberSales;
-	private DaoImplJaxb dao;
+	private DaoImplJDBC dao;
 	final static double TAX_RATE = 1.04;
 
 	public Shop() {
 		inventory = new ArrayList<Product>();
 		sales = new ArrayList<Sale>();
-		this.dao = new DaoImplJaxb();
+		this.dao = new DaoImplJDBC();
+	    this.dao.connect(); 
 		List<Product> inventory;
 	}
 
@@ -268,7 +270,9 @@ public class Shop {
 		System.out.print("Stock: ");
 		int stock = scanner.nextInt();
 
-		addProduct(new Product(name, new Amount(wholesalerPrice), true, stock));
+		 Product product = new Product(name, new Amount(wholesalerPrice), true, stock);
+	      addProduct(product);
+		  boolean productAdded = dao.addProduct(product);
 	}
 
 	/**
@@ -287,6 +291,7 @@ public class Shop {
 		if (product != null) {
 // remove it
 			if (inventory.remove(product)) {
+				  boolean productRemoved = dao.deleteProduct(product);
 				System.out.println("El producto " + name + " ha sido eliminado");
 
 			} else {
@@ -312,6 +317,7 @@ public class Shop {
 			int stock = scanner.nextInt();
 // update stock product
 			product.setStock(product.getStock() + stock);
+			 boolean stockAdded = dao.updateStock(product.getName(),stock);
 			System.out.println("El stock del producto " + name + " ha sido actualizado a " + product.getStock());
 
 		} else {

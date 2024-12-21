@@ -95,4 +95,22 @@ public class DaoImplFile implements Dao{
 	        return inventory;
 	    }
 
+	@Override
+	public boolean addProduct(Product product) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean updateStock(String productName, int newStock) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean deleteProduct(Product product) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }
