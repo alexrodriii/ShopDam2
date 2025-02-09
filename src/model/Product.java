@@ -1,28 +1,48 @@
 package model;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
+@Entity
+@Table(name = "inventory")
+
 @XmlRootElement(name = "product")
 @XmlType(propOrder = { "name", "id", "wholesalerPrice", "stock", "available", "publicPrice" })
 
 public class Product {
-
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id")
 	private int id;
 
+	@Column(name = "name")
 	private String name;
 
+	@Embedded
 	private Amount publicPrice;
 
+	@Embedded
 	private Amount wholesalerPrice;
 
+	@Column(name = "available")
 	private boolean available;
 
+	@Column(name = "stock")
 	private int stock;
 
+	@Transient
 	private static int totalProducts;
 
 	public final static double EXPIRATION_RATE = 0.60;
