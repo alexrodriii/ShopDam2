@@ -2,6 +2,7 @@ package main;
 
 import model.Product;
 import model.Sale;
+import view.ShopView;
 import model.Amount;
 import model.Client;
 import model.Employee;
@@ -24,6 +25,7 @@ import org.xml.sax.SAXException;
 import dao.DaoImplFile;
 import dao.DaoImplHibernate;
 import dao.DaoImplJDBC;
+import dao.DaoImplMongoDB;
 import dao.jaxb.DaoImplJaxb;
 import dao.xml.DaoImplXml;
 import dao.xml.SaxReader;
@@ -36,13 +38,14 @@ public class Shop {
 // private Sale[] sales;
 	private ArrayList<Sale> sales;
 	private int numberSales;
-	private DaoImplHibernate dao;
+	private DaoImplMongoDB dao;
 	final static double TAX_RATE = 1.04;
 
 	public Shop() {
 		inventory = new ArrayList<Product>();
 		sales = new ArrayList<Sale>();
-		this.dao = new DaoImplHibernate();
+		this.dao = new DaoImplMongoDB();
+
 	    this.dao.connect(); 
 		List<Product> inventory;
 	}
@@ -92,7 +95,7 @@ public class Shop {
 
 		shop.loadInventory();
 
-	   //shop.initSession();
+	   shop.initSession();
 
 		Scanner scanner = new Scanner(System.in);
 		int opcion = 0;
@@ -163,7 +166,7 @@ public class Shop {
 
 	}
 
-	private void initSession() {
+	public void initSession() {
 // TODO Auto-generated method stub
 
 		Employee employee = new Employee("test");

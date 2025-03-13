@@ -1,27 +1,26 @@
 package dao;
 
+import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-
-
-
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.query.Query;
 
 import model.Employee;
 import model.Product;
+import model.ProductHistory;
 
-public class DaoImplHibernate implements Dao{
-	
-	private SessionFactory sessionFactory;
-	private Transaction tx;
-	
-	 public DaoImplHibernate() {
-	        connect();
-	    }
-	 
-	@Override
+public class DaoImplHibernate implements Dao {
+
+    private SessionFactory sessionFactory;
+    private Session session;
+    private Transaction tx;
+
+    @Override
 	public void connect() {
 		try {
 			  sessionFactory = new Configuration().configure("hibernate.cfg.xml").buildSessionFactory();		
@@ -32,74 +31,77 @@ public class DaoImplHibernate implements Dao{
 		
 	}
 
-	@Override
-	public void disconnect() {
-	
-		if(sessionFactory != null) {
-			sessionFactory.close();
-		}
-		
-	}
+    @Override
+    public void disconnect() {
+        if (session != null && session.isOpen()) {
+            session.close();
+        }
+        if (sessionFactory != null) {
+            sessionFactory.close();
+        }
+    }
 
-	@Override
-	public Employee getEmployee(int employeeId, String password) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public Employee getEmployee(int employeeId, String password) {
+        return null; 
+    }
 
-	
+    @Override
+    public boolean writeInventory(ArrayList<Product> inventory) {
+        connect();
+        boolean exportado = false;
+        try {
+            tx = session.beginTransaction();
+            LocalDateTime today = LocalDateTime.now();
+          
+            for (Product product : inventory) {
+                ProductHistory historial = new ProductHistory();
+                historial.setProductId(product.getId());
+                historial.setName(product.getName());
+                historial.setWholesalerPrice(product.getWholesalerPrice());
+                historial.setStock(product.getStock());
+                historial.setDate(today.toLocalDate().toString());
+                session.save(historial);
 
-	@Override
-	public boolean writeInventory(ArrayList<Product> inventory) {
-	    Transaction transaction = null;
-	    try (Session session = sessionFactory.openSession()) {
-	        transaction = session.beginTransaction();
+             
+                Product existingProduct = session.get(Product.class, product.getId());
+                if (existingProduct != null) {
+                    existingProduct.setStock(product.getStock());
+                    session.update(existingProduct);
+                }
+            }
 
-	        for (Product product : inventory) {
-	      
-	            Product existingProduct = session.get(Product.class, product.getId());
 	            
-	            if (existingProduct == null) {
-	          
-	                session.save(product);
-	            } else {
-	            
-	            }
-	        }
-	        
-	        transaction.commit(); 
-	        return true;
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	        return false; 
-	    }
-	}
+            tx.commit();
+            exportado = true;
+        } 
+        finally {
+        	
+            disconnect();
+        }
+        return exportado;
+    }
 
-	@Override
-	public ArrayList<Product> getInventory() {
-	
-		Session session = null;
-		 ArrayList<Product> products = new ArrayList<>();
-	        try {
-	            session = sessionFactory.openSession();
-	            products = (ArrayList<Product>) session.createQuery("FROM Product", Product.class).list();
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        } finally {
-	            if (session != null) {
-	                session.close();
-	            }
-	        }
-	        return new ArrayList<>(products);
-	    }
-
-	@Override
-	public boolean addProduct(Product product) {
-		Transaction transaction = null;
+    @Override
+    public ArrayList<Product> getInventory() {
+        ArrayList<Product> products = new ArrayList<>();
         try (Session session = sessionFactory.openSession()) {
-            transaction = (Transaction) session.beginTransaction();
+            products = (ArrayList<Product>) session.createQuery("FROM Product", Product.class).list();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
+
+    @Override
+    public boolean addProduct(Product product) {
+        try (Session session = sessionFactory.openSession()) {
+        	
+            Transaction transaction = session.beginTransaction();
             session.save(product);
+            
             transaction.commit();
+            System.out.println("Product added successfully.");
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -107,8 +109,7 @@ public class DaoImplHibernate implements Dao{
         }
     }
 
-
-	@Override
+    @Override
 	public boolean updateStock(String productName, int newStock) {
 	     Transaction transaction = null;
 	        try (Session session = sessionFactory.openSession()) {
@@ -127,11 +128,11 @@ public class DaoImplHibernate implements Dao{
 	        }
 	        return false;
 	    }
-	@Override
-	public boolean deleteProduct(Product product) {
-	    Transaction transaction = null;
+
+    @Override
+    public boolean deleteProduct(Product product) {
         try (Session session = sessionFactory.openSession()) {
-            transaction = (Transaction) session.beginTransaction();
+            Transaction transaction = session.beginTransaction();
             Product productToRemove = session.get(Product.class, product.getId());
             if (productToRemove != null) {
                 session.delete(productToRemove);
@@ -140,10 +141,7 @@ public class DaoImplHibernate implements Dao{
             }
         } catch (Exception e) {
             e.printStackTrace();
-           
         }
-    
-		return false;
-	}
-
+        return false;
+    }
 }

@@ -23,5 +23,7 @@ public interface Dao {
 	public boolean updateStock(String productName, int newStock);
 	
 	public boolean deleteProduct(Product product);
+
+
 	
 }
